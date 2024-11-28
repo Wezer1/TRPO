@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet id="create-table-boxes" author="uPagge">
+    <preConditions onFail="MARK_RAN">
+        <not>
+            <tableExists tableName="boxes"/>
+        </not>
+    </preConditions>
+    <createTable tableName="boxes">
+        <column name="id" type="INTEGER">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="price" type="INTEGER"/>
+        <column name="weight" type="DECIMAL(10, 2)"/>
+        <column name="is_occupied" type="BOOLEAN">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+</changeSet>
+    <changeSet id="set-is-occupied-true-if-box-occupied" author="uPagge">
+        <addColumn  tableName="boxes">
+            <column name="is_occupied" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn >
+    </changeSet>
+
+
+
+</databaseChangeLog>

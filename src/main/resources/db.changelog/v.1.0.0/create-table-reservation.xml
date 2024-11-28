@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-reservation" author="uPagge">
+
+        <createTable tableName="reservation">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="client_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="box_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="TIMESTAMP"/>
+            <column name="end_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-foreign-key-box_id" author="uPagge">
+        <addForeignKeyConstraint
+                baseTableName="reservation"
+                baseColumnNames="box_id"
+                referencedTableName="boxes"
+                referencedColumnNames="id"
+                constraintName="fk_reservation_boxes"/>
+    </changeSet>
+
+    <changeSet id="add-foreign-key-client_id" author="uPagge">
+        <addForeignKeyConstraint
+                baseTableName="reservation"
+                baseColumnNames="client_id"
+                referencedTableName="clients"
+                referencedColumnNames="id"
+                constraintName="fk_reservation_clients"/>
+    </changeSet>
+
+</databaseChangeLog>
