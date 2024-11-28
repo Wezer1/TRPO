@@ -40,9 +40,9 @@ public class ClientService {
 
     @Transactional
     public void deleteClient(Integer clientId) {
-        log.info("Delete order");
+        log.info("Delete client");
         if(clientRepository.findById(clientId).isEmpty()){
-            throw new NoSuchException("There is no order with ID = "+ clientId + " in Database");
+            throw new NoSuchException("There is no client with ID = "+ clientId + " in Database");
         }
         clientRepository.deleteById(clientId);
     }

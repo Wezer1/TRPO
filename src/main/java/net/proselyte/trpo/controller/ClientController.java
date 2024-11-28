@@ -22,13 +22,13 @@ public class ClientController {
 
     @GetMapping("/{clientId}")
     //  @PreAuthorize("hasAuthority('users:read')")
-    public ResponseEntity<ClientDTO> getOrderById(@PathVariable Integer clientId){
+    public ResponseEntity<ClientDTO> getClientById(@PathVariable Integer clientId){
         return ResponseEntity.ok(clientService.getClientById(clientId));
     }
 
     @DeleteMapping("/{clientId}")
     //   @PreAuthorize("hasAuthority('users:write')")
-    public ResponseEntity<ClientDTO> deleteOrder(@PathVariable Integer clientId){
+    public ResponseEntity<ClientDTO> deleteClient(@PathVariable Integer clientId){
         clientService.deleteClient(clientId);
         return ResponseEntity.noContent().build();
     }
@@ -41,7 +41,7 @@ public class ClientController {
 
     @PostMapping("/{userId}")
 //    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ClientDTO> changeUser(@PathVariable Integer userId,
+    public ResponseEntity<ClientDTO> changeClient(@PathVariable Integer userId,
                                                                   @RequestBody ClientDTO clientDTO){
         return ResponseEntity.ok(clientService.changeClient(userId, clientDTO));
     }
