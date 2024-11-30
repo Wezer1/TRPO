@@ -1,5 +1,6 @@
 package net.proselyte.trpo.exception_handling;
 
+import net.proselyte.trpo.exceptions.IsNotAvailableException;
 import net.proselyte.trpo.exceptions.NoSuchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,4 +15,12 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
+    @ExceptionHandler(IsNotAvailableException.class)
+    public ResponseEntity<Object> handleIsNotAvailableException(
+            IsNotAvailableException exception){
+
+        return ResponseEntity.status(HttpStatus.IM_USED).body(exception.getMessage());
+    }
+
+
 }

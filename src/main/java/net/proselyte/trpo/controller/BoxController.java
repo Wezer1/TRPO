@@ -46,7 +46,7 @@ public class BoxController {
     @PostMapping("/{boxId}")
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BoxDTO> changeBox(@PathVariable Integer boxId,
-                                                  @RequestBody BoxDTO boxDTO){
+                                                 @Valid @RequestBody BoxDTO boxDTO){
         return ResponseEntity.ok(boxService.changeBox(boxId, boxDTO));
     }
 }
