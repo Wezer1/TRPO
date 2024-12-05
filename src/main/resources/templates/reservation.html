@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservations</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Reservations for Client</h1>
+<table id="reservationsTable">
+    <thead>
+    <tr>
+        <th>Reservation ID</th>
+        <th>Client ID</th>
+        <th>Box ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Строки данных о бронированиях будут добавлены динамически -->
+    </tbody>
+</table>
+<button onclick="window.location.href = '/auth/reservations';">Back</button>
+
+<script>
+    // Получаем ID клиента из URL (например, /client/1)
+    const reservationId = window.location.pathname.split('/').pop();
+
+    console.log(reservationId);
+
+    // Fetch reservations data for the client from the API
+    fetch(`/api/reservation/${reservationId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch reservations');
+            }
+            return response.json(); // Получаем данные в формате JSON
+        })
+        .then(reservation => {
+            // Заполняем таблицу данными о бронированиях
+            const tableBody = document.querySelector('#reservationsTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${reservation.id}</td>
+                <td>${reservation.clientId}</td>
+                <td>${reservation.boxId}</td>
+                <td>${new Date(reservation.startDate).toLocaleString()}</td>
+                <td>${new Date(reservation.endDate).toLocaleString()}</td>
+            `;
+            tableBody.appendChild(row); // Добавляем строку в таблицу
+
+        })
+        .catch(error => {
+            console.error('Error fetching reservations:', error); // Логируем ошибку
+        });
+</script>
+
+</body>
+</html>

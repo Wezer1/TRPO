@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Reservation</title>
+</head>
+<body>
+<h1>Change Reservation</h1>
+<form action="/reservation/{reservationId}" method="POST" id="changeReservationForm">
+    <input type="hidden" name="reservationId" id="reservationId" value="123"> <!-- This will be the reservation ID -->
+
+    <label for="clientId">Client ID:</label>
+    <input type="number" id="clientId" name="clientId" disabled><br><br> <!-- Client ID is not changeable -->
+
+    <label for="boxId">Box ID:</label>
+    <input type="number" id="boxId" name="boxId" disabled><br><br> <!-- Box ID is not changeable -->
+
+    <label for="createDate">Creation Date:</label>
+    <input type="text" id="createDate" name="createDate" disabled><br><br> <!-- Creation Date is not changeable -->
+
+    <label for="endDate">New End Date:</label>
+    <input type="datetime-local" id="endDate" name="endDate" required><br><br>
+
+    <button type="submit">Update Reservation</button>
+</form>
+
+<button onclick="window.location.href = '/auth/reservations';">Back</button>
+
+<script>
+    // Fetch reservation data from the API to populate the form
+    const reservationId = window.location.pathname.split('/').pop();
+
+    // Fetch reservation data by ID
+    fetch(`/api/reservation/${reservationId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch reservation data');
+        }
+        return response.json();
+    })
+        .then(reservation => {
+            // Populate the form with existing reservation data
+            document.getElementById('reservationId').value = reservation.id;
+            document.getElementById('clientId').value = reservation.client_id;
+            document.getElementById('boxId').value = reservation.box_id;
+            document.getElementById('createDate').value = new Date(reservation.createDate).toLocaleString();
+        })
+        .catch(error => {
+            console.error('Error fetching reservation data:', error);
+        });
+
+    // Handle form submission with AJAX (without reloading the page)
+    document.getElementById("changeReservationForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const reservationId = document.getElementById('reservationId').value;
+        const endDate = formData.get("endDate");
+
+        fetch(`/api/reservation/${reservationId}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                clientId: formData.get("clientId"),
+                boxId: formData.get("boxId"),
+                createDate: formData.get("createDate"),
+                endDate: endDate // Send the new end date
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    .then(response => response.json())
+            .then(data => {
+                alert("Reservation updated successfully!");
+                window.location.href = "/auth/reservations"; // Redirect to reservations list page
+            })
+            .catch(error => {
+                alert("Error updating reservation: " + error);
+                console.error(error);
+            });
+    });
+</script>
+
+</body>
+</html>

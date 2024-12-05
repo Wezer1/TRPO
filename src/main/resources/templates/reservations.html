@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservations List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Reservations</h1>
+<table id="reservationsTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Client ID</th>
+        <th>Box ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows will be added dynamically -->
+    </tbody>
+</table>
+<button onclick="window.location.href = '/auth/reservations/create';">Create</button>
+
+<button onclick="window.location.href = '/auth/success';">Back</button>
+</body>
+<script>
+    // Fetch reservations data from the API
+    fetch('/api/reservation/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch reservations');
+            }
+            return response.json(); // Получаем данные в формате JSON
+        })
+        .then(data => {
+            const tableBody = document.querySelector('#reservationsTable tbody');
+            data.forEach(reservations => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservations.id}</td>
+                    <td>${reservations.clientId}</td>
+                    <td>${reservations.boxId}</td>
+                    <td>${new Date(reservations.startDate).toLocaleString()}</td>
+                    <td>${new Date(reservations.endDate).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewReservation(${reservations.id})">View</button>
+                        <button class="btn btn-danger" onclick="deleteReservation(${reservations.id})">Delete</button>
+                        <button class="btn btn-warning" onclick="changeReservation(${reservations.id})">Change</button>
+                    </td>
+                `;
+                tableBody.appendChild(row); // Добавляем строку в таблицу
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching reservations:', error); // Логирование ошибок
+        });
+
+    function viewReservation(reservationId) {
+        window.location.href = `/auth/reservations/${reservationId}`;
+    }
+
+    function changeReservation(reservationId) {
+        window.location.href = `/auth/reservations/change/${reservationId}`;
+    }
+
+    // Function to delete reservation
+    function deleteReservation(reservationId) {
+        if (confirm(`Are you sure you want to delete reservation with ID ${reservationId}?`)) {
+            fetch(`/api/reservation/${reservationId}`, {
+                method: 'DELETE'
+            })
+        .then(response => {
+                if (response.ok) {
+                    alert('Reservation deleted successfully');
+                    location.reload(); // Reload the page to update the reservation list
+                } else {
+                    alert('Failed to delete reservation');
+                }
+            })
+                .catch(error => {
+                    console.error('Error deleting reservation:', error);
+                    alert('Failed to delete reservation');
+                });
+        }
+    }
+</script>
+</html>

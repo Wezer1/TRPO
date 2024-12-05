@@ -1,11 +1,5 @@
 package net.proselyte.trpo.controller;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import net.proselyte.trpo.entity.Client;
-import net.proselyte.trpo.service.ClientService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +19,17 @@ public class AuthController {
     }
 
     @GetMapping("/clients")
-    @PreAuthorize("hasAuthority('clients:read')")
+    @PreAuthorize("hasAuthority('clients:write')")
     public String getClientsPage(){
         return "clients";
     }
 
     @GetMapping("/clients/{clientId}")
-    @PreAuthorize("hasAuthority('clients:read')")
+    @PreAuthorize("hasAuthority('clients:write')")
     public String getClientPage(){
         return "client";
     }
+
     @GetMapping("/clients/change/{clientId}")
     @PreAuthorize("hasAuthority('clients:write')")
     public String getClientChangePage(){
@@ -62,6 +57,29 @@ public class AuthController {
     @PreAuthorize("hasAuthority('clients:write')")
     public String getCreateBoxPage(){
         return "createBox";
+    }
+
+    @GetMapping("/reservations")
+    @PreAuthorize("hasAuthority('clients:read')")
+    public String getReservationsPage(){
+        return "reservations";
+    }
+
+    @GetMapping("/reservations/{reservationId}")
+    @PreAuthorize("hasAuthority('clients:read')")
+    public String getReservationPage(){
+        return "reservation";
+    }
+
+    @GetMapping("/reservations/change/{reservationId}")
+    @PreAuthorize("hasAuthority('clients:read')")
+    public String getChangeReservationPage(){
+        return "changeReservation";
+    }
+    @GetMapping("/reservations/create")
+    @PreAuthorize("hasAuthority('clients:read')")
+    public String getCreateReservationPage(){
+        return "createReservation";
     }
 
     @GetMapping("/register")

@@ -16,9 +16,9 @@ public class ReservationDTO {
 
     private Integer id;
 
-    private Integer client_id;
+    private Integer clientId;
 
-    private Integer box_id;
+    private Integer boxId;
 
     private LocalDateTime startDate;
 

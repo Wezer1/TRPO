@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Reservation</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .disabled {
+            background-color: #f0f0f0;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+<h1>Create Reservation</h1>
+<form action="/reservations" method="POST" id="createReservationForm">
+    <label for="clientId">Client:</label>
+    <select id="clientId" name="clientId" required>
+        <!-- Clients will be added dynamically -->
+    </select><br><br>
+
+    <label for="boxId">Box:</label>
+    <select id="boxId" name="boxId" required>
+        <!-- Available boxes will be added dynamically -->
+    </select><br><br>
+
+    <label for="startDate">Start Date:</label>
+    <input type="datetime-local" id="startDate" name="startDate" required><br><br>
+
+    <label for="endDate">End Date:</label>
+    <input type="datetime-local" id="endDate" name="endDate" required><br><br>
+
+    <button type="submit">Create Reservation</button>
+</form>
+
+<button onclick="window.location.href = '/auth/reservations';">Back</button>
+
+<script>
+    // Fetch available clients and boxes
+    Promise.all([
+        fetch('/api/clients/'),
+        fetch('/api/boxes/')
+    ])
+        .then(responses => Promise.all(responses.map(res => res.json())))
+        .then(([clients, boxes]) => {
+            // Populate client select options
+            const clientSelect = document.getElementById('clientId');
+            clients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = `${client.lastname}, ${client.email}`;
+                clientSelect.appendChild(option);
+            });
+
+            // Populate box select options with only available boxes
+            const boxSelect = document.getElementById('boxId');
+            boxes.forEach(box => {
+                if (!box.is_occupied) {
+                    const option = document.createElement('option');
+                    option.value = box.id;
+                    option.textContent = `Box ID: ${box.id}, Price: ${box.price}, Weight: ${box.weight}`;
+                    boxSelect.appendChild(option);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching clients or boxes:', error);
+        });
+
+    // Handle form submission
+    document.getElementById('createReservationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const reservationData = {
+            clientId: formData.get('clientId'),
+            boxId: formData.get('boxId'),
+            startDate: formData.get('startDate'),
+            endDate: formData.get('endDate')
+        };
+
+        fetch('/api/reservation/', {
+            method: 'POST',
+            body: JSON.stringify(reservationData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert("Reservation created successfully!");
+                window.location.href = "/auth/reservations"; // Redirect to the reservations list page
+            })
+            .catch(error => {
+                alert("Error creating reservation: " + error);
+                console.error(error);
+            });
+    });
+</script>
+
+</body>
+</html>

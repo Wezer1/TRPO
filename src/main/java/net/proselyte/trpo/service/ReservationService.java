@@ -82,15 +82,15 @@ public class ReservationService {
     @Transactional
     public ReservationDTO createReservation(ReservationDTO reservationDTO){
 // Проверка на валидность клиента
-        Optional<Client> clientOptional = Optional.ofNullable(clientRepository.findById(reservationDTO.getClient_id())
-                .orElseThrow(()->new NoSuchException("There is no client with ID = " + reservationDTO.getClient_id() + " in DB")));
+        Optional<Client> clientOptional = Optional.ofNullable(clientRepository.findById(reservationDTO.getClientId())
+                .orElseThrow(()->new NoSuchException("There is no client with ID = " + reservationDTO.getClientId() + " in DB")));
 
         // Проверка на валидность ячейки
-        Optional<Box> boxOptional = Optional.ofNullable(boxRepository.findById(reservationDTO.getBox_id())
-                .orElseThrow(()->new NoSuchException("There is no box with ID = " + reservationDTO.getBox_id() + " in DB")));
+        Optional<Box> boxOptional = Optional.ofNullable(boxRepository.findById(reservationDTO.getBoxId())
+                .orElseThrow(()->new NoSuchException("There is no box with ID = " + reservationDTO.getBoxId() + " in DB")));
 
         if (boxOptional.get().getIs_occupied()) {
-            throw new IsNotAvailableException("Box with ID " + reservationDTO.getBox_id() + " is not available during the specified time");
+            throw new IsNotAvailableException("Box with ID " + reservationDTO.getBoxId() + " is not available during the specified time");
         }
 
         // Создание нового бронирования
