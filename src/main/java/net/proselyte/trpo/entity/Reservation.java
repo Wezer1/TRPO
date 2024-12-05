@@ -4,7 +4,6 @@ package net.proselyte.trpo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,11 +15,11 @@ public class Reservation {
     @Column(name = "id")
     private Integer id;
 
-    @JoinColumn(name = "client_id", nullable = false)
-    private Integer client_id;
+    @Column(name = "client_id", nullable = false)
+    private Integer clientId;
 
-    @JoinColumn(name = "box_id", nullable = false)
-    private Integer box_id;
+    @Column(name = "box_id", nullable = false)
+    private Integer boxId;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
@@ -28,3 +27,4 @@ public class Reservation {
     @Column(name = "end_date")
     private LocalDateTime endDate;
 }
+

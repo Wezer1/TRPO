@@ -1,8 +1,8 @@
 package net.proselyte.trpo.model;
 
 public enum Permission {
-    USERS_READ("users:read"),
-    USERS_WRITE("users:write");
+    CLIENTS_READ("clients:read"),
+    CLIENTS_WRITE("clients:write");
     private final String permission;
 
     Permission(String permission) {

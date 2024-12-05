@@ -7,6 +7,7 @@ import net.proselyte.trpo.dto.ClientDTO;
 import net.proselyte.trpo.entity.Box;
 import net.proselyte.trpo.service.BoxService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,17 +20,20 @@ public class BoxController {
     private final  BoxService boxService;
 
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('clients:read')")
     public ResponseEntity<List<BoxDTO>> getBoxes(){
         return ResponseEntity.ok(boxService.getAllBoxes());
     }
 
     @GetMapping("/{boxId}")
+    @PreAuthorize("hasAuthority('clients:read')")
     //  @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<BoxDTO> getBoxById(@PathVariable Integer boxId){
         return ResponseEntity.ok(boxService.getBoxById(boxId));
     }
 
     @DeleteMapping("/{boxId}")
+    @PreAuthorize("hasAuthority('clients:write')")
     //   @PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<BoxDTO> deleteClient(@PathVariable Integer boxId){
         boxService.deleteBox(boxId);
@@ -38,12 +42,14 @@ public class BoxController {
 
 
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('clients:write')")
     //@PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<BoxDTO> addBox(@Valid @RequestBody BoxDTO boxDTO){
         return ResponseEntity.ok(boxService.saveBox(boxDTO));
     }
 
     @PostMapping("/{boxId}")
+    @PreAuthorize("hasAuthority('clients:write')")
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BoxDTO> changeBox(@PathVariable Integer boxId,
                                                  @Valid @RequestBody BoxDTO boxDTO){

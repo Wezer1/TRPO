@@ -16,12 +16,5 @@
 
         </createTable>
     </changeSet>
-    <changeSet id="add-column-occupied" author="uPagge">
-        <addColumn tableName="boxes">
-            <column name="is_occupied" type="boolean">
-                <constraints nullable="false" defaultValue="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
 
 </databaseChangeLog>

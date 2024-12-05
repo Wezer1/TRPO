@@ -4,6 +4,14 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <include file="v.1.0.8/changelog.xml" relativeToChangelogFile="true"/>
+    <changeSet id="add-tag-1.0.6" author="uPagge">
+        <tagDatabase tag="v.1.0.6"/>
+    </changeSet>
+
+    <include file="create-table-clients.xml" relativeToChangelogFile="true"/>
+
+    <changeSet id="drop-admins-table" author="uPagge">
+        <dropTable tableName="admins"/>
+    </changeSet>
 
 </databaseChangeLog>

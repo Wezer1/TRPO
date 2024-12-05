@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Details</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Client Details</h1>
+<table id="clientDetailsTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Last Name</th>
+        <th>Role</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Строка данных будет добавлена динамически -->
+    </tbody>
+</table>
+
+<script>
+    // Получаем ID клиента из URL (например, /client/1)
+    const clientId = window.location.pathname.split('/').pop();
+
+    console.log(clientId);
+    // Fetch client data from the API by ID
+    fetch(`/api/clients/${clientId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch client data');
+        }
+        return response.json(); // Получаем данные в формате JSON
+    })
+        .then(client => {
+            // Заполняем таблицу данными о клиенте
+            const tableBody = document.querySelector('#clientDetailsTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${client.id}</td>
+                <td>${client.email}</td>
+                <td>${client.lastname}</td>
+                <td>${client.role}</td>
+                <td>${client.status}</td>
+            `;
+            tableBody.appendChild(row); // Добавляем строку в таблицу
+        })
+        .catch(error => {
+            console.error('Error fetching client data:', error); // Логируем ошибку
+        });
+</script>
+</body>
+</html>
