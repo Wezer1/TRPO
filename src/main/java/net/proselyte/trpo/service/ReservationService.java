@@ -2,7 +2,6 @@ package net.proselyte.trpo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.proselyte.trpo.dto.ClientDTO;
 import net.proselyte.trpo.dto.ReservationDTO;
 import net.proselyte.trpo.entity.Box;
 import net.proselyte.trpo.entity.Client;
@@ -58,8 +57,8 @@ public class ReservationService {
         Optional<Reservation> reservationOptional = Optional.ofNullable(reservationRepository.findById(reservationId)
                 .orElseThrow(()->new NoSuchException("There is no reservation with ID = " + reservationId + " in DB")));
 
-        Optional<Box> boxOptional = Optional.ofNullable(boxRepository.findById(reservationOptional.get().getBox_id())
-                .orElseThrow(()->new NoSuchException("There is no box with ID = " + reservationOptional.get().getBox_id() + " in DB")));
+        Optional<Box> boxOptional = Optional.ofNullable(boxRepository.findById(reservationOptional.get().getBoxId())
+                .orElseThrow(()->new NoSuchException("There is no box with ID = " + reservationOptional.get().getBoxId() + " in DB")));
         boxOptional.get().setIs_occupied(false);
         boxRepository.save(boxOptional.get());
 
