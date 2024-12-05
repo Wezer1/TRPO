@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Box</title>
+</head>
+<body>
+<h1>Change Box</h1>
+<form action="/boxes/{boxId}" method="POST" id="changeBoxForm">
+    <input type="hidden" name="boxId" id="boxId" value="123"> <!-- This will be the box ID -->
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required><br><br>
+
+    <label for="weight">Weight:</label>
+    <input type="number" id="weight" name="weight" required><br><br>
+
+    <label for="is_occupied">Occupied:</label>
+    <select id="is_occupied" name="is_occupied">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+    </select><br><br>
+
+    <button type="submit">Update Box</button>
+</form>
+
+<script>
+    // JavaScript to dynamically fill form data or submit using AJAX (without reloading the page)
+    document.getElementById("changeBoxForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const boxId = window.location.pathname.split('/').pop(); // Get box ID from URL
+        const formData = new FormData(this);
+
+        // Sending the updated box data via a POST request
+        fetch(`/api/boxes/${boxId}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                price: formData.get("price"),
+                weight: formData.get("weight"),
+                is_occupied: formData.get("is_occupied") === "true" // Convert the value to boolean
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Box updated successfully!");
+            window.location.href = "/auth/boxes"; // Redirect to the boxes list page after successful update
+            console.log(data);
+        })
+        .catch(error => {
+            alert("Error updating box: " + error);
+            console.error(error);
+        });
+    });
+</script>
+</body>
+</html>

@@ -12,5 +12,6 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
     Reservation findByClientId(Integer clientId);
+    Reservation findFirstByBoxId(Integer boxId);
 }
 

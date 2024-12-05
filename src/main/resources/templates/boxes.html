@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boxes List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Boxes</h1>
+<table id="boxesTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Price</th>
+        <th>Weight</th>
+        <th>Occupied</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows will be added dynamically -->
+    </tbody>
+</table>
+<button onclick="window.location.href = '/auth/boxes/create';">Create New Box</button>
+
+
+<script>
+    // Fetch boxes data from the API
+    fetch('/api/boxes/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch boxes');
+            }
+            return response.json(); // Получаем данные в формате JSON
+        })
+        .then(data => {
+            const tableBody = document.querySelector('#boxesTable tbody');
+            data.forEach(box => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${box.id}</td>
+                    <td>${box.price}</td>
+                    <td>${box.weight}</td>
+                    <td>${box.is_occupied ? 'Yes' : 'No'}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewBox(${box.id})">View</button>
+                        <button class="btn btn-danger" onclick="deleteBox(${box.id})">Delete</button>
+                        <button class="btn btn-warning" onclick="changeBox(${box.id})">Change</button>
+                    </td>
+                `;
+                tableBody.appendChild(row); // Добавляем строку в таблицу
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching boxes:', error); // Логирование ошибок
+        });
+
+    function viewBox(boxId) {
+        window.location.href = `/auth/boxes/${boxId}`;
+    }
+
+    function changeBox(boxId) {
+        window.location.href = `/auth/boxes/change/${boxId}`;
+    }
+
+    // Function to delete box
+    function deleteBox(boxId) {
+        if (confirm(`Are you sure you want to delete box with ID ${boxId}?`)){
+            fetch(`/api/boxes/${boxId}`, {
+                method: 'DELETE'
+            })
+        .then(response => {
+                if (response.ok) {
+                    alert('Box deleted successfully');
+                    location.reload(); // Reload the page to update the box list
+                } else {
+                    alert('Failed to delete box');
+                }
+            })
+                .catch(error => {
+                    console.error('Error deleting box:', error);
+                    alert('Failed to delete box');
+                });
+        }
+    }
+</script>
+</body>
+</html>

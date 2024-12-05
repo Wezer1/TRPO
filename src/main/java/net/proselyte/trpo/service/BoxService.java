@@ -6,9 +6,12 @@ import net.proselyte.trpo.dto.BoxDTO;
 import net.proselyte.trpo.dto.ClientDTO;
 import net.proselyte.trpo.entity.Box;
 import net.proselyte.trpo.entity.Client;
+import net.proselyte.trpo.entity.Reservation;
+import net.proselyte.trpo.exceptions.IsNotAvailableException;
 import net.proselyte.trpo.exceptions.NoSuchException;
 import net.proselyte.trpo.mapper.BoxMapper;
 import net.proselyte.trpo.repository.BoxRepository;
+import net.proselyte.trpo.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoxService {
     private final BoxRepository boxRepository;
+    private final ReservationRepository reservationRepository;
     private final BoxMapper boxMapper;
 
     @Transactional
@@ -46,7 +50,12 @@ public class BoxService {
         if(boxRepository.findById(boxId).isEmpty()){
             throw new NoSuchException("There is no box with ID = "+ boxId + " in Database");
         }
-        boxRepository.deleteById(boxId);
+        Reservation reservation = reservationRepository.findFirstByBoxId(boxId);
+        if(reservation == null){
+            boxRepository.deleteById(boxId);
+        }else{
+            throw new IsNotAvailableException("Detected reservation, box can`t be deleted");
+        }
     }
 
     @Transactional

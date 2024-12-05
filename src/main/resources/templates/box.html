@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Details</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Box Details</h1>
+<table id="boxDetailsTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Price</th>
+        <th>Weight</th>
+        <th>Occupied</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Строка данных будет добавлена динамически -->
+    </tbody>
+</table>
+
+<script>
+    // Получаем ID ящика из URL (например, /auth/boxes/1)
+    const boxId = window.location.pathname.split('/').pop();
+
+    console.log(boxId);
+    // Fetch box data from the API by ID
+    fetch(`/api/boxes/${boxId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch box data');
+        }
+        return response.json(); // Получаем данные в формате JSON
+    })
+        .then(box => {
+            // Заполняем таблицу данными о ящике
+            const tableBody = document.querySelector('#boxDetailsTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${box.id}</td>
+            <td>${box.price}</td>
+            <td>${box.weight}</td>
+            <td>${box.is_occupied ? 'Yes' : 'No'}</td>
+        `;
+            tableBody.appendChild(row); // Добавляем строку в таблицу
+        })
+        .catch(error => {
+            console.error('Error fetching box data:', error); // Логируем ошибку
+        });
+</script>
+</body>
+</html>

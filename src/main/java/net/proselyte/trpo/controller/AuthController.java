@@ -41,7 +41,28 @@ public class AuthController {
         return "changeClient";
     }
 
+    @GetMapping("/boxes")
+    @PreAuthorize("hasAuthority('clients:read')")
+    public String getBoxesPage(){
+        return "boxes";
+    }
+    @GetMapping("/boxes/{boxesId}")
+    @PreAuthorize("hasAuthority('clients:read')")
+    public String getBoxPage(){
+        return "box";
+    }
 
+    @GetMapping("/boxes/change/{boxesId}")
+    @PreAuthorize("hasAuthority('clients:write')")
+    public String getChangeBoxPage(){
+        return "changeBox";
+    }
+
+    @GetMapping("/boxes/create")
+    @PreAuthorize("hasAuthority('clients:write')")
+    public String getCreateBoxPage(){
+        return "createBox";
+    }
 
     @GetMapping("/register")
     public String registration(){
